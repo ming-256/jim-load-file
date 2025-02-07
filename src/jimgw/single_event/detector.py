@@ -240,6 +240,10 @@ class GroundBased2G(Detector):
         delta_t = data_td.dt.value  # type: ignore
         data = jnp.fft.rfft(jnp.array(data_td.value) * tukey(n, tukey_alpha)) * delta_t
         freq = jnp.fft.rfftfreq(n, delta_t)
+        print(n)
+        print(delta_t)
+        print(freq)
+        print(segment_length)
         # TODO: Check if this is the right way to fetch PSD
         start_psd = int(trigger_time) - gps_start_pad - 2 * psd_pad
         end_psd = int(trigger_time) - gps_start_pad - psd_pad
@@ -260,6 +264,8 @@ class GroundBased2G(Detector):
         self.frequencies = freq[(freq > f_min) & (freq < f_max)]
         self.data = data[(freq > f_min) & (freq < f_max)]
         self.psd = psd[(freq > f_min) & (freq < f_max)]
+        print(self.frequencies)
+        exit()
 
     def load_data_from_file(
         self,
@@ -298,14 +304,17 @@ class GroundBased2G(Detector):
         delta_t = data_td.dt.value  # type: ignore
         data = jnp.fft.rfft(jnp.array(data_td.value) * tukey(n, psd_alpha)) * delta_t
         freq = jnp.fft.rfftfreq(n, delta_t)
-        
+        print(n)
+        print(delta_t)
+        print(freq)
+        print(duration)
         print("Fetching {} PSD data...".format(self.name))
         psd_data_td = psdData
         assert isinstance(
             psd_data_td, TimeSeries
         ), "PSD data is not a TimeSeries object."
         psd = psd_data_td.psd(
-            fftlength=duration, overlap=0, window=("tukey", psd_alpha), method="median"
+            fftlength=duration
         ).value  # TODO: Check whether this is sright.
 
         print("Finished loading data.")
@@ -313,6 +322,8 @@ class GroundBased2G(Detector):
         self.frequencies = freq[(freq > f_min) & (freq < f_max)]
         self.data = data[(freq > f_min) & (freq < f_max)]
         self.psd = psd[(freq > f_min) & (freq < f_max)]
+        print(self.frequencies)
+        exit()
     
     def fd_response(
         self,
