@@ -305,7 +305,7 @@ class GroundBased2G(Detector):
             psd_data_td, TimeSeries
         ), "PSD data is not a TimeSeries object."
         psd = psd_data_td.psd(
-            fftlength=duration, overlap=0, window=("tukey", psd_alpha), method="median"
+            fftlength=segment_length
         ).value  # TODO: Check whether this is sright.
 
         print("Finished loading data.")
