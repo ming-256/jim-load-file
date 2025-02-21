@@ -265,8 +265,7 @@ class GroundBased2G(Detector):
         self,
         ifoData: TimeSeries,
         psdData: TimeSeries,
-        duration: Float,
-        roll_off: Float,
+        tukey_alpha : Float = 0.2,
         f_min: Float,
         f_max: Float,
     ) -> None:
@@ -279,10 +278,8 @@ class GroundBased2G(Detector):
             The TimeSeries object containing the Interferometer data
         psdData : TimeSeries
             The TimeSeries object containing the PSD data
-        duration : Float
-            Length of the signal 
-        roll_off : Float
-            Roll off duration of the Tukey window in s
+        tukey_alpha : Float
+            The alpha parameter for the Tukey window.
         f_min : Float
             Minimum frequency to fetch data
         f_max : Float
@@ -290,13 +287,12 @@ class GroundBased2G(Detector):
         """
 
         print("Fetching data from {}...".format(self.name))
-        psd_alpha = 2 * roll_off / duration
         data_td = ifoData
         assert isinstance(data_td, TimeSeries), "Data is not a TimeSeries object."
         segment_length = data_td.duration.value
         n = len(data_td)
         delta_t = data_td.dt.value  # type: ignore
-        data = jnp.fft.rfft(jnp.array(data_td.value) * tukey(n, psd_alpha)) * delta_t
+        data = jnp.fft.rfft(jnp.array(data_td.value) * tukey(n, tukey_alpha)) * delta_t
         freq = jnp.fft.rfftfreq(n, delta_t)
         
         print("Fetching {} PSD data...".format(self.name))
