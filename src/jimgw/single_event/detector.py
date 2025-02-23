@@ -265,9 +265,9 @@ class GroundBased2G(Detector):
         self,
         ifoData: TimeSeries,
         psdData: TimeSeries,
-        tukey_alpha : Float = 0.2,
         f_min: Float,
         f_max: Float,
+        tukey_alpha : Float = 0.2,
     ) -> None:
         """
         Load data from a TimeSeries object / dictionary.
@@ -278,12 +278,12 @@ class GroundBased2G(Detector):
             The TimeSeries object containing the Interferometer data
         psdData : TimeSeries
             The TimeSeries object containing the PSD data
-        tukey_alpha : Float
-            The alpha parameter for the Tukey window.
         f_min : Float
             Minimum frequency to fetch data
         f_max : Float
             Maximum frequency to fetch data
+        tukey_alpha : Float
+            The alpha parameter for the Tukey window.
         """
 
         print("Fetching data from {}...".format(self.name))
